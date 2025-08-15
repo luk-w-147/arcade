@@ -3,328 +3,318 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Arcade — Snake (One‑File Site)</title>
-  <meta name="description" content="A single‑file Snake game you can host anywhere (GitHub Pages, Netlify, Vercel)." />
+  <title>Speed Racer — Car Shop Edition</title>
+  <meta name="description" content="Single-file HTML/JS remake of a Pygame driving game with obstacles, coins, and a car shop." />
   <style>
     :root{
-      --bg:#0b1020;
-      --panel:#121833;
-      --ink:#eef2ff;
-      --muted:#8ea0ff;
-      --accent:#6ee7b7;
-      --danger:#ff6b6b;
-      --grid:#1a244a;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 20px;
+      --bg:#0c1224; --panel:#121833; --ink:#eaf0ff; --muted:#91a0ff; --accent:#6ee7b7; --gold:#ffd700; --danger:#ff6b6b;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font:16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--ink); background: radial-gradient(1200px 800px at 15% 10%, #12183a 0, #0b1020 60%);
-      display:flex; align-items:center; justify-content:center; padding:24px;
-    }
-    .card{
-      width:min(900px, 100%);
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    header{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      padding:20px 22px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
-    }
-    .brand{display:flex; gap:12px; align-items:center}
-    .logo{width:36px;height:36px;border-radius:12px;background:conic-gradient(from 180deg at 50% 50%, #6ee7b7, #8ea0ff, #6ee7b7); filter:saturate(1.2) hue-rotate(8deg)}
-    h1{font-size:18px; margin:0}
-    .sub{color:var(--muted); font-size:13px}
+    body{margin:0; background:radial-gradient(1200px 800px at 15% 10%, #12183a 0, #0b1020 60%); color:var(--ink); font:16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial}
+    .wrap{max-width:920px; margin:auto; padding:16px}
+    .gamecard{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.35); overflow:hidden}
+    header{display:flex; gap:12px; align-items:center; justify-content:space-between; padding:14px 16px}
+    .logo{width:34px;height:34px;border-radius:12px;background:conic-gradient(from 180deg at 50% 50%, #6ee7b7, #8ea0ff, #6ee7b7)}
+    .title{font-weight:800; letter-spacing:.2px}
     .actions{display:flex; gap:8px}
-    button, .link-btn{
-      appearance:none; border:none; cursor:pointer; color:var(--ink);
-      background:#1a244a; padding:10px 14px; border-radius:12px; box-shadow:var(--shadow);
-    }
-    .primary{background:linear-gradient(90deg, #6ee7b7, #8ea0ff); color:#0b1020; font-weight:700}
-    .wrap{display:grid; grid-template-columns: 1.2fr .8fr; gap:18px; padding:18px;}
-    @media (max-width: 840px){ .wrap{grid-template-columns:1fr} }
-
-    .stage{
-      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:16px; padding:16px; position:relative;
-    }
-    .hud{display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-bottom:12px}
-    .pill{
-      background:#101736; border:1px solid rgba(255,255,255,.08); color:var(--ink);
-      padding:8px 12px; border-radius:999px; font-weight:600; display:flex; gap:8px; align-items:center;
-    }
-    .pill small{color:var(--muted); font-weight:500}
-
-    canvas{
-      width:100%; aspect-ratio:1/1; display:block; image-rendering: pixelated; border-radius:12px; background:#0b122d; border:1px solid rgba(255,255,255,.08);
-    }
-
-    .side{
-      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:16px; padding:16px;
-    }
-    .side h2{margin:6px 0 8px 0; font-size:16px}
-    .side p{margin:0 0 10px 0; color:var(--muted)}
-    ul{margin:0 0 12px 18px; color:var(--muted)}
-
-    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#0b122d; border:1px solid rgba(255,255,255,.14); padding:2px 6px; border-radius:8px; font-size:13px}
-    .status{position:absolute; inset:0; display:grid; place-items:center; text-align:center; pointer-events:none}
-    .status .panel{background:rgba(7,12,30,.7); backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,.1); padding:18px; border-radius:14px}
-    .status h3{margin:0 0 6px 0}
-
-    .mobile-keys{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px}
-    .mobile-keys button{padding:14px 0; font-weight:700}
-    .mobile-only{display:none}
-    @media (hover:none){ .mobile-only{display:block}}
+    button{appearance:none; border:none; cursor:pointer; color:var(--ink); background:#1a244a; padding:10px 14px; border-radius:12px}
+    .primary{background:linear-gradient(90deg, #6ee7b7, #8ea0ff); color:#0b1020; font-weight:800}
+    canvas{width:100%; max-width:900px; aspect-ratio:4/3; display:block; background:#0b122d; border-top:1px solid rgba(255,255,255,.06)}
+    .hint{padding:8px 14px; color:var(--muted); font-size:13px}
   </style>
 </head>
 <body>
-  <div class="card" role="application" aria-label="Snake game">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Arcade — Snake</h1>
-          <div class="sub">Single‑file website. No frameworks. Plays offline.</div>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="primary" id="playPauseBtn" aria-label="Play or pause">▶ Play</button>
-        <button id="resetBtn" aria-label="Reset game">↺ Reset</button>
-      </div>
-    </header>
-
-    <div class="wrap">
-      <section class="stage">
-        <div class="hud" aria-live="polite">
-          <div class="pill"><small>Score</small> <span id="score">0</span></div>
-          <div class="pill"><small>High</small> <span id="high">0</span></div>
-          <div class="pill"><small>Speed</small> <span id="speed">Normal</span></div>
-        </div>
-        <canvas id="game" width="600" height="600" aria-label="Game board"></canvas>
-        <div class="status" id="status">
-          <div class="panel">
-            <h3 id="statusTitle">Paused</h3>
-            <div id="statusHelp" class="sub">Press <span class="kbd">Space</span> or tap ▶ Play</div>
+  <div class="wrap">
+    <div class="gamecard" role="application" aria-label="Driving game">
+      <header>
+        <div style="display:flex; gap:10px; align-items:center">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="title">Speed Racer — Car Shop Edition</div>
+            <div style="color:var(--muted); font-size:13px">Single-file HTML/JS • Works on GitHub Pages</div>
           </div>
         </div>
-        <div class="mobile-only">
-          <div class="mobile-keys">
-            <button data-dir="up">▲</button>
-            <div></div>
-            <button data-dir="right">▶</button>
-            <button data-dir="left">◀</button>
-            <div></div>
-            <button data-dir="down">▼</button>
-          </div>
+        <div class="actions">
+          <button id="playBtn" class="primary">▶ Play</button>
+          <button id="shopBtn">🛒 Shop (S)</button>
+          <button id="resetBtn">↺ Reset</button>
         </div>
-      </section>
-
-      <aside class="side">
-        <h2>How to play</h2>
-        <p>Steer the snake to eat the food and grow. Don’t crash into walls or yourself.</p>
-        <ul>
-          <li><span class="kbd">WASD</span> or arrow keys to move</li>
-          <li><span class="kbd">Space</span> to play/pause</li>
-          <li><span class="kbd">R</span> to reset</li>
-        </ul>
-        </aside>
+      </header>
+      <canvas id="game" width="800" height="600" aria-label="Game canvas"></canvas>
+      <div class="hint">Controls: Arrow Keys to drive · S open/close shop · Space to restart after crash</div>
     </div>
   </div>
 
   <script>
-    (function(){
-      const canvas = document.getElementById('game');
-      const ctx = canvas.getContext('2d');
-      const scoreEl = document.getElementById('score');
-      const highEl = document.getElementById('high');
-      const speedEl = document.getElementById('speed');
-      const statusEl = document.getElementById('status');
-      const statusTitle = document.getElementById('statusTitle');
-      const statusHelp = document.getElementById('statusHelp');
-      const playPauseBtn = document.getElementById('playPauseBtn');
-      const resetBtn = document.getElementById('resetBtn');
+  // === Speed Racer (HTML5 Canvas) ===
+  (function(){
+    const SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600, FPS = 60;
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
 
-      const gridSize = 20; // 20x20
-      let cell = canvas.width / gridSize;
+    // Colors
+    const WHITE = '#ffffff', BLACK='#000000', RED='#ff6b6b', GREEN='#228b22', YELLOW='#ffff00', GOLD='#ffd700', ORANGE='#ffa500',
+          GRAY='#404040', DARK_GRAY='#2d2d2d', BLUE='#87ceeb', CYAN='#00ffff', PURPLE='#800080', SILVER='#c0c0c0';
 
-      const SPEEDS = { slow: 140, normal: 110, fast: 85 };
-      let speedKey = 'normal';
+    // Car types mirroring the Pygame data
+    const CAR_TYPES = {
+      basic:  { name:'Basic Car',   color:RED,    speed:5, cost:0,  description:'Standard car'},
+      sports: { name:'Sports Car',  color:ORANGE, speed:7, cost:15, description:'Faster movement'},
+      luxury: { name:'Luxury Car',  color:PURPLE, speed:6, cost:25, description:'Attracts more coins'},
+      electric:{name:'Electric',    color:CYAN,   speed:6, cost:20, description:'Silent and efficient'},
+      truck:  { name:'Armored Truck',color:SILVER,speed:4, cost:35, description:'Takes 2 hits'}
+    };
 
-      let snake, dir, nextDir, food, score, high, loopId, alive, running;
+    // Game state
+    let running=true, inTitle=true, inShop=false, gameOver=false;
+    let score=0, totalCoins=0, speed=2.0;
+    let titleSel=0, titleAnim=0;
 
-      function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    const roadLines=[]; for(let i=0;i<20;i++) roadLines.push({x:SCREEN_WIDTH/2-5, y:i*60, w:10, h:30});
 
-      function init(){
-        snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
-        dir = {x:1,y:0};
-        nextDir = {...dir};
-        food = spawnFood();
-        score = 0;
-        alive = true;
-        running = false;
-        updateHUD();
-        draw();
-        showStatus('Paused', 'Press Space or tap ▶ Play');
-      }
+    let currentCar='basic', owned={ basic:true }, carLives=1;
+    const player = { x:SCREEN_WIDTH/2-15, y:SCREEN_HEIGHT-80, w:30, h:50, speed:CAR_TYPES[currentCar].speed };
 
-      function spawnFood(){
-        let spot;
-        do {
-          spot = { x: randInt(0, gridSize-1), y: randInt(0, gridSize-1) };
-        } while (snake.some(s => s.x===spot.x && s.y===spot.y));
-        return spot;
-      }
+    const obstacles=[], coins=[], coinFx=[];
 
-      function updateHUD(){
-        scoreEl.textContent = score;
-        if(!high){ high = Number(localStorage.getItem('snakeHigh')||0); }
-        if(score > high){ high = score; localStorage.setItem('snakeHigh', high); }
-        highEl.textContent = high;
-        speedEl.textContent = speedKey.charAt(0).toUpperCase()+speedKey.slice(1);
-      }
+    const keys = { left:false, right:false, up:false, down:false };
 
-      function draw(){
-        // background
-        ctx.fillStyle = '#0b122d';
-        ctx.fillRect(0,0,canvas.width, canvas.height);
-        // subtle grid
-        ctx.strokeStyle = '#10183a';
-        ctx.lineWidth = 1;
-        for(let i=0;i<=gridSize;i++){
-          ctx.beginPath(); ctx.moveTo(i*cell,0); ctx.lineTo(i*cell, canvas.height); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(0,i*cell); ctx.lineTo(canvas.width, i*cell); ctx.stroke();
+    function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function randColor(){ return `rgb(${rand(100,255)},${rand(100,255)},${rand(100,255)})`; }
+
+    // Input
+    document.addEventListener('keydown', (e)=>{
+      const k=e.key.toLowerCase();
+      if(inTitle){
+        if(k==='arrowup') titleSel=Math.max(0, titleSel-1);
+        else if(k==='arrowdown') titleSel=Math.min(2, titleSel+1);
+        else if(k==='enter' || k===' '){
+          if(titleSel===0) startGame();
+          else if(titleSel===1){ inTitle=false; inShop=true; }
+          else if(titleSel===2) running=false; // "Quit"
         }
-        // food
-        ctx.fillStyle = '#6ee7b7';
-        roundRect(food.x*cell+4, food.y*cell+4, cell-8, cell-8, 6, true);
-        // snake
-        snake.forEach((s, idx)=>{
-          const head = idx===0;
-          ctx.fillStyle = head ? '#8ea0ff' : '#5062d6';
-          roundRect(s.x*cell+3, s.y*cell+3, cell-6, cell-6, 8, true);
-          if(head){
-            // eyes
-            ctx.fillStyle = '#0b1020';
-            const ex = s.x*cell + cell/2 + (dir.x*3);
-            const ey = s.y*cell + cell/2 + (dir.y*3);
-            ctx.beginPath(); ctx.arc(ex-5, ey-5, 2.2, 0, Math.PI*2); ctx.fill();
-            ctx.beginPath(); ctx.arc(ex+5, ey+5, 2.2, 0, Math.PI*2); ctx.fill();
-          }
-        });
+        return;
+      }
+      if(inShop){
+        if(k==='arrowup') shopIndex=Math.max(0, shopIndex-1);
+        else if(k==='arrowdown') shopIndex=Math.min(shopList.length-1, shopIndex+1);
+        else if(k==='enter') buyOrSelect();
+        else if(k==='escape' || k==='s') inShop=false;
+        return;
+      }
+      if(k==='arrowleft') keys.left=true;
+      else if(k==='arrowright') keys.right=true;
+      else if(k==='arrowup') keys.up=true;
+      else if(k==='arrowdown') keys.down=true;
+      else if(k==='s') inShop=true;
+      else if(k===' ' && gameOver) restart();
+    });
+    document.addEventListener('keyup', (e)=>{
+      const k=e.key.toLowerCase();
+      if(k==='arrowleft') keys.left=false;
+      else if(k==='arrowright') keys.right=false;
+      else if(k==='arrowup') keys.up=false;
+      else if(k==='arrowdown') keys.down=false;
+    });
+
+    document.getElementById('playBtn').onclick=()=>{ inTitle?startGame():null };
+    document.getElementById('shopBtn').onclick=()=>{ inTitle=false; inShop=true; };
+    document.getElementById('resetBtn').onclick=restart;
+
+    // Shop state
+    const shopList = Object.keys(CAR_TYPES);
+    let shopIndex = 0;
+
+    function buyOrSelect(){
+      const key = shopList[shopIndex];
+      const data = CAR_TYPES[key];
+      if(owned[key]){ // equip
+        currentCar=key; player.speed=data.speed; carLives=(key==='truck'?2:1);
+      }else{
+        if(totalCoins>=data.cost){ totalCoins-=data.cost; owned[key]=true; currentCar=key; player.speed=data.speed; carLives=(key==='truck'?2:1); }
+      }
+    }
+
+    function startGame(){ inTitle=false; gameOver=false; restart(); }
+
+    function restart(){
+      gameOver=false; score=0; speed=2.0;
+      obstacles.length=0; coins.length=0; coinFx.length=0;
+      player.x=SCREEN_WIDTH/2-15; player.y=SCREEN_HEIGHT-80; player.w=30; player.h=50; player.speed=CAR_TYPES[currentCar].speed;
+      carLives=(currentCar==='truck'?2:1);
+    }
+
+    function spawnObstacle(){ const lanes=[200,300,400,500]; const lane=lanes[rand(0,lanes.length-1)];
+      obstacles.push({x:lane, y:-60, w:35, h:60, speed:speed+Math.random()*2, color:randColor()}); }
+
+    function spawnCoin(){ const lanes=[180,230,280,330,380,430,480,530,580]; const lane=lanes[rand(0,lanes.length-1)];
+      const mult=(currentCar==='luxury'?1.5:1.0);
+      coins.push({x:lane, y:-20, r:12, speed:speed+1, rot:0, value:Math.max(1, Math.round(mult))}); }
+
+    function addCoinFx(x,y,value){ coinFx.push({x,y,t:30,a:255,value}); }
+
+    function update(){
+      if(inTitle){ titleAnim+=0.05; return; }
+      if(gameOver || inShop) return;
+
+      if(keys.left && player.x>160) player.x-=player.speed;
+      if(keys.right && player.x<610) player.x+=player.speed;
+      if(keys.up && player.y>0) player.y-=player.speed;
+      if(keys.down && player.y<SCREEN_HEIGHT-player.h) player.y+=player.speed;
+
+      // Road lines
+      for(const line of roadLines){ line.y+=speed; if(line.y>SCREEN_HEIGHT) line.y=-30; }
+
+      // Spawns
+      if(Math.random()<0.02) spawnObstacle();
+      const coinRate = (currentCar==='luxury')?0.025:0.015;
+      if(Math.random()<coinRate) spawnCoin();
+
+      // Obstacles
+      for(let i=obstacles.length-1;i>=0;i--){ const o=obstacles[i]; o.y+=o.speed; if(o.y>SCREEN_HEIGHT){
+          obstacles.splice(i,1); score+=10; if(score>0 && score%100===0) speed+=0.5; }
+        else { if(rectsOverlap(player,o)){ carLives-=1; if(carLives<=0){ gameOver=true; } else { obstacles.splice(i,1);} } }
       }
 
-      function roundRect(x,y,w,h,r,fill){
-        ctx.beginPath();
-        ctx.moveTo(x+r,y);
-        ctx.arcTo(x+w,y,x+w,y+h,r);
-        ctx.arcTo(x+w,y+h,x,y+h,r);
-        ctx.arcTo(x,y+h,x,y,r);
-        ctx.arcTo(x,y,x+w,y,r);
-        if(fill) ctx.fill(); else ctx.stroke();
+      // Coins
+      for(let i=coins.length-1;i>=0;i--){ const c=coins[i]; c.y+=c.speed; c.rot+=0.1; if(c.y>SCREEN_HEIGHT){ coins.splice(i,1); }
+        else { const dx=(player.x+player.w/2)-c.x, dy=(player.y+player.h/2)-c.y; const dist=Math.hypot(dx,dy);
+          if(dist < c.r+15){ coins.splice(i,1); const coinValue=25*c.value; score+=coinValue; totalCoins+=c.value; addCoinFx(c.x,c.y,coinValue);} }
       }
 
-      function step(){
-        if(!running || !alive) return;
-        dir = nextDir;
-        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-        // wall
-        if(head.x<0 || head.y<0 || head.x>=gridSize || head.y>=gridSize){
-          return gameOver('You hit a wall!');
-        }
-        // self
-        if(snake.some((s,i)=> i>0 && s.x===head.x && s.y===head.y)){
-          return gameOver('You bit yourself!');
-        }
-        snake.unshift(head);
-        if(head.x === food.x && head.y === food.y){
-          score += 1;
-          food = spawnFood();
-        } else {
-          snake.pop();
-        }
-        updateHUD();
-        draw();
+      // Coin FX
+      for(let i=coinFx.length-1;i>=0;i--){ const f=coinFx[i]; f.y-=2; f.t-=1; f.a = Math.floor((f.t/30)*255); if(f.t<=0) coinFx.splice(i,1); }
+    }
+
+    function rectsOverlap(a,b){ return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+
+    // Drawing helpers
+    function draw(){
+      if(inTitle){ drawTitle(); requestAnimationFrame(tick); return; }
+
+      // Background
+      ctx.fillStyle=BLUE; ctx.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+      // Grass
+      ctx.fillStyle=GREEN; ctx.fillRect(0,0,150,SCREEN_HEIGHT); ctx.fillRect(650,0,150,SCREEN_HEIGHT);
+      // Trees
+      for(let i=0;i<10;i++){ const y=(i*80)%SCREEN_HEIGHT; ctx.fillStyle='#8b4513'; ctx.fillRect(50,y,10,20); ctx.fillRect(720,y,10,20); ctx.beginPath(); ctx.fillStyle=GREEN; ctx.arc(55,y,15,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(725,y,15,0,Math.PI*2); ctx.fill(); }
+      // Road
+      ctx.fillStyle=GRAY; ctx.fillRect(150,0,500,SCREEN_HEIGHT); ctx.fillStyle=WHITE; ctx.fillRect(150,0,5,SCREEN_HEIGHT); ctx.fillRect(645,0,5,SCREEN_HEIGHT);
+      // Center lines
+      ctx.fillStyle=YELLOW; for(const line of roadLines){ ctx.fillRect(line.x, line.y, line.w, line.h); }
+
+      // Obstacles
+      for(const o of obstacles){ ctx.fillStyle=o.color; ctx.fillRect(o.x|0, o.y|0, o.w, o.h); }
+      // Coins
+      for(const c of coins){ drawCoin(c); }
+      // Player
+      drawCar(player, CAR_TYPES[currentCar].color, currentCar==='truck');
+
+      // Effects
+      for(const f of coinFx){ ctx.save(); ctx.globalAlpha = Math.max(0, Math.min(1, f.a/255)); ctx.fillStyle=GOLD; ctx.font='bold 20px system-ui, sans-serif'; const t='+'+f.value; const w=ctx.measureText(t).width; ctx.fillText(t, f.x - w/2, f.y); ctx.restore(); }
+
+      // UI
+      ctx.fillStyle=WHITE; ctx.font='bold 22px system-ui, sans-serif'; ctx.fillText('Score: '+score, 10, 28);
+      ctx.fillStyle=GOLD;  ctx.fillText('Coins: '+totalCoins, 10, 56);
+      ctx.fillStyle=WHITE; ctx.font='14px system-ui, sans-serif'; ctx.fillText('Car: '+CAR_TYPES[currentCar].name, 10, 80);
+      if(currentCar==='truck'){ ctx.fillText('Lives: '+carLives, 10, 98); }
+      ctx.fillStyle='#cccccc'; ctx.fillText('Arrow Keys: Drive  |  S: Shop', SCREEN_WIDTH-270, 24);
+
+      if(inShop) drawShop();
+      if(gameOver) drawGameOver();
+
+      requestAnimationFrame(tick);
+    }
+
+    function drawCar(c, color, armor){
+      ctx.fillStyle=color; ctx.fillRect(c.x|0, c.y|0, c.w, c.h);
+      ctx.fillStyle='#333'; ctx.fillRect((c.x+5)|0, (c.y+5)|0, c.w-10, c.h-25);
+      if(armor){ ctx.strokeStyle=DARK_GRAY; ctx.lineWidth=2; ctx.strokeRect((c.x+2)|0, (c.y+2)|0, c.w-4, c.h-4); }
+      ctx.fillStyle=BLACK; ctx.fillRect((c.x-3)|0, (c.y+10)|0, 6, 12); ctx.fillRect((c.x+c.w-3)|0, (c.y+10)|0, 6, 12); ctx.fillRect((c.x-3)|0, (c.y+c.h-22)|0, 6, 12); ctx.fillRect((c.x+c.w-3)|0, (c.y+c.h-22)|0, 6, 12);
+    }
+
+    function drawCoin(c){
+      const cx=c.x|0, cy=c.y|0; // outer circle
+      ctx.beginPath(); ctx.fillStyle=GOLD; ctx.arc(cx, cy, c.r, 0, Math.PI*2); ctx.fill();
+      ctx.lineWidth=2; ctx.strokeStyle=ORANGE; ctx.stroke();
+      ctx.lineWidth=1; ctx.beginPath(); ctx.arc(cx, cy, c.r-4, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle=ORANGE; ctx.font='bold 16px system-ui, sans-serif'; ctx.fillText('$', cx-4, cy+5);
+    }
+
+    function drawShop(){
+      ctx.save();
+      ctx.fillStyle='rgba(0,0,0,.8)'; ctx.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+      ctx.fillStyle=WHITE; ctx.font='bold 40px system-ui, sans-serif'; centerText('CAR SHOP', 60);
+      ctx.fillStyle=GOLD; ctx.font='bold 24px system-ui, sans-serif'; centerText('Coins: '+totalCoins, 100);
+
+      const startY=150; const rowH=70; const pad=20;
+      for(let i=0;i<shopList.length;i++){
+        const key=shopList[i], d=CAR_TYPES[key]; const y=startY+i*rowH;
+        // highlight
+        if(i===shopIndex){ ctx.fillStyle='rgba(80,80,150,.6)'; ctx.fillRect(50, y-12, SCREEN_WIDTH-100, rowH-8); ctx.strokeStyle=CYAN; ctx.strokeRect(50, y-12, SCREEN_WIDTH-100, rowH-8); }
+        // preview
+        ctx.fillStyle=d.color; ctx.fillRect(70, y, 30, 40);
+        // name + stats
+        ctx.fillStyle=WHITE; ctx.font='bold 22px system-ui, sans-serif'; ctx.fillText(d.name, 120, y+6+16);
+        ctx.font='14px system-ui, sans-serif'; ctx.fillText('Speed: '+d.speed+'  —  '+d.description, 120, y+36);
+        // price / status
+        let label, color=WHITE;
+        if(owned[key]){ label=(key===currentCar)?'EQUIPPED':'OWNED'; color=(key===currentCar)?GREEN:'#ffff80'; }
+        else { label='$'+d.cost; color=(totalCoins>=d.cost)?WHITE:RED; }
+        const w=ctx.measureText(label).width; ctx.fillStyle=color; ctx.fillText(label, SCREEN_WIDTH-70-w, y+24);
       }
+      ctx.fillStyle='#bbbbbb'; ctx.font='14px system-ui, sans-serif';
+      centerText('Up/Down: Navigate  •  Enter: Buy/Select  •  S/Esc: Close', SCREEN_HEIGHT-40);
+      ctx.restore();
+    }
 
-      function loop(){
-        clearInterval(loopId);
-        loopId = setInterval(step, SPEEDS[speedKey]);
+    function drawGameOver(){
+      ctx.save(); ctx.fillStyle='rgba(0,0,0,.7)'; ctx.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+      ctx.fillStyle=RED; ctx.font='bold 34px system-ui, sans-serif'; centerText('GAME OVER!', SCREEN_HEIGHT/2-40);
+      ctx.fillStyle=WHITE; ctx.font='bold 22px system-ui, sans-serif'; centerText('Final Score: '+score, SCREEN_HEIGHT/2);
+      ctx.fillStyle='#cccccc'; ctx.font='16px system-ui, sans-serif'; centerText('Press Space to Play Again', SCREEN_HEIGHT/2+36);
+      ctx.restore();
+    }
+
+    function drawTitle(){
+      // animated background + road similar to Pygame title
+      ctx.fillStyle=BLUE; ctx.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+      const roadOffset = Math.floor((titleAnim*50)%60);
+      ctx.fillStyle=GRAY; ctx.fillRect(300,0,200,SCREEN_HEIGHT);
+      ctx.fillStyle=WHITE; ctx.fillRect(300,0,5,SCREEN_HEIGHT); ctx.fillRect(495,0,5,SCREEN_HEIGHT);
+      ctx.fillStyle=YELLOW; for(let i=-2;i<SCREEN_HEIGHT/30+2;i++){ const y=i*60+roadOffset; if(0<=y && y<=SCREEN_HEIGHT) ctx.fillRect(395,y,10,30); }
+      // moving cars
+      const carOffset = Math.floor((titleAnim*30)%120);
+      for(let i=0;i<3;i++){ const y=i*120+carOffset; if(0<=y && y<=SCREEN_HEIGHT){ ctx.fillStyle=RED; ctx.fillRect(250,y,25,40);} if(0<=y+60 && y+60<=SCREEN_HEIGHT){ ctx.fillStyle=ORANGE; ctx.fillRect(525,y+60,25,40);} }
+      const bounce = Math.sin(titleAnim*2)*5;
+      ctx.fillStyle=WHITE; ctx.font='bold 64px system-ui, sans-serif'; centerText('SPEED RACER', 150+bounce);
+      ctx.fillStyle=GOLD;  ctx.font='bold 24px system-ui, sans-serif'; centerText('Car Shop Edition', 190+bounce);
+      const options=['PLAY GAME','CAR SHOP','QUIT']; const startY=280;
+      for(let i=0;i<options.length;i++){
+        const y=startY+i*60; if(i===titleSel){ const w=320+Math.sin(titleAnim*8)*10; ctx.fillStyle='rgba(0,100,200,.6)'; ctx.fillRect(SCREEN_WIDTH/2 - w/2, y-15, w, 50); ctx.strokeStyle=CYAN; ctx.strokeRect(SCREEN_WIDTH/2 - w/2, y-15, w, 50); }
+        ctx.fillStyle=(i===titleSel)?WHITE:'#c8c8c8'; ctx.font=(i===titleSel)?'bold 36px system-ui, sans-serif':'bold 30px system-ui, sans-serif'; centerText(options[i], y+10);
       }
+      ctx.fillStyle=GOLD; ctx.font='bold 20px system-ui, sans-serif'; ctx.textAlign='right'; ctx.fillText('Coins: '+totalCoins, SCREEN_WIDTH-20, 30);
+      ctx.fillStyle=WHITE; ctx.font='14px system-ui, sans-serif'; ctx.textAlign='left'; ctx.fillText('Current Car: '+CAR_TYPES[currentCar].name, 20, SCREEN_HEIGHT-20);
 
-      function gameOver(msg){
-        alive = false; running = false;
-        clearInterval(loopId);
-        showStatus('Game Over', msg + ' Press R to restart.');
-      }
+      // car preview
+      drawCar({x:50, y:SCREEN_HEIGHT-70, w:30, h:50}, CAR_TYPES[currentCar].color, currentCar==='truck');
 
-      function showStatus(title, help){
-        statusTitle.textContent = title;
-        statusHelp.innerHTML = help;
-        statusEl.style.opacity = 1;
-      }
-      function hideStatus(){ statusEl.style.opacity = 0; }
+      titleAnim+=0.016;
+      requestAnimationFrame(tick);
+    }
 
-      function toggleRun(){
-        if(!alive){ return; }
-        running = !running;
-        if(running){ hideStatus(); loop(); playPauseBtn.textContent = '⏸ Pause'; }
-        else { showStatus('Paused', 'Press Space or tap ▶ Play'); playPauseBtn.textContent = '▶ Play'; }
-      }
+    function centerText(text, y){ const m=ctx.measureText(text).width; ctx.fillText(text, (SCREEN_WIDTH-m)/2, y); }
 
-      // controls
-      document.addEventListener('keydown', (e)=>{
-        const k = e.key.toLowerCase();
-        const map = { arrowup:'up', w:'up', arrowdown:'down', s:'down', arrowleft:'left', a:'left', arrowright:'right', d:'right', ' ':'space', r:'r', '1':'slow', '2':'normal', '3':'fast' };
-        const act = map[k]; if(!act) return;
-        if(['up','down','left','right'].includes(act)){
-          const d = dirFrom(act);
-          // prevent 180 turns
-          if(d.x !== -dir.x || d.y !== -dir.y){ nextDir = d; }
-        } else if(act==='space'){ toggleRun(); }
-        else if(act==='r'){ init(); }
-        else if(['slow','normal','fast'].includes(act)){
-          speedKey = act; if(running) loop(); updateHUD();
-        }
-      });
+    function tick(){ update(); draw(); }
 
-      document.querySelectorAll('[data-dir]').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          const d = dirFrom(btn.dataset.dir);
-          if(d.x !== -dir.x || d.y !== -dir.y){ nextDir = d; }
-        });
-      });
+    // Ensure crisp pixels on HiDPI
+    function fitCanvas(){ const dpr=window.devicePixelRatio||1; const cssW=canvas.clientWidth; const cssH=Math.round(cssW*0.75); canvas.style.height=cssH+'px'; canvas.width=Math.floor(cssW*dpr); canvas.height=Math.floor(cssH*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
+    new ResizeObserver(fitCanvas).observe(canvas); fitCanvas();
 
-      playPauseBtn.addEventListener('click', toggleRun);
-      resetBtn.addEventListener('click', init);
-
-      function dirFrom(name){
-        return name==='up'?{x:0,y:-1}:
-               name==='down'?{x:0,y:1}:
-               name==='left'?{x:-1,y:0}:{x:1,y:0};
-      }
-
-      // Responsiveness: keep square canvas pixels crisp
-      function fitCanvas(){
-        const size = Math.min(canvas.clientWidth, canvas.clientHeight);
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = Math.floor(size*dpr);
-        canvas.height = Math.floor(size*dpr);
-        cell = canvas.width / gridSize;
-        draw();
-      }
-      const ro = new ResizeObserver(fitCanvas); ro.observe(canvas);
-
-      // boot
-      init();
-    })();
+    // boot
+    requestAnimationFrame(tick);
+  })();
   </script>
 </body>
 </html>
