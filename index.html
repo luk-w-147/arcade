@@ -135,14 +135,7 @@
           <li><span class="kbd">Space</span> to play/pause</li>
           <li><span class="kbd">R</span> to reset</li>
         </ul>
-        <h2>Host this site (free)</h2>
-        <p>Upload this single HTML file to GitHub Pages, Netlify, or Vercel and you’ll get a free subdomain.</p>
-        <ul>
-          <li>GitHub Pages → <span class="kbd">yourname.github.io/repo</span></li>
-          <li>Netlify → <span class="kbd">your-site.netlify.app</span></li>
-          <li>Vercel → <span class="kbd">your-site.vercel.app</span></li>
-        </ul>
-      </aside>
+        </aside>
     </div>
   </div>
 
@@ -160,7 +153,7 @@
       const resetBtn = document.getElementById('resetBtn');
 
       const gridSize = 20; // 20x20
-      const cell = canvas.width / gridSize;
+      let cell = canvas.width / gridSize;
 
       const SPEEDS = { slow: 140, normal: 110, fast: 85 };
       let speedKey = 'normal';
@@ -324,6 +317,7 @@
         const dpr = window.devicePixelRatio || 1;
         canvas.width = Math.floor(size*dpr);
         canvas.height = Math.floor(size*dpr);
+        cell = canvas.width / gridSize;
         draw();
       }
       const ro = new ResizeObserver(fitCanvas); ro.observe(canvas);
